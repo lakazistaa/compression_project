@@ -5,4 +5,5 @@ myenv/
 *.pyc
 
 
-
+# Ignore the db.sqlite3 file
+pfe_project/db.sqlite3
