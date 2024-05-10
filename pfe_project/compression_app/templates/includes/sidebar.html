@@ -1,0 +1,101 @@
+{% load static %}
+
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-dark" id="sidenav-main">
+    <div class="sidenav-header">
+        <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+        <a class="navbar-brand m-0" href="{% url 'dashboard' %}" target="_blank">
+            <img src="{% static 'img/logo-ct.png' %}" class="navbar-brand-img h-100" alt="main_logo">
+            <span class="ms-1 font-weight-bold text-white">CompressionApp</span>
+        </a>
+    </div>
+    <hr class="horizontal light mt-0 mb-2">
+    <div class="collapse navbar-collapse w-auto overflow-hidden" id="sidenav-collapse-main" style="height:100%; overflow-hidden;">
+        <ul class="navbar-nav">
+            <!-- Dashboard and Overview -->
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'dashboard' in request.path %} active {% endif %}" href="{% url 'dashboard' %}">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">dashboard</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Dashboard</span>
+                </a>
+            </li>
+
+            <!-- User and Access Management -->
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'users' in request.path %} active {% endif %}" href="#">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">people</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Utilisateurs</span>
+                </a>
+            </li>
+
+            <!-- Data Management -->
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'datasets' in request.path %} active {% endif %}" href="#">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">storage</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Jeux de données</span>
+                </a>
+            </li>
+
+            <!-- Compression Tasks and Methods -->
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'compression-methods' in request.path %} active {% endif %}" href="#">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">compress</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Méthodes de compression</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'compression-tasks' in request.path %} active {% endif %}" href="#">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">task</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Tâches de compression</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'compress-model' in request.path %} active {% endif %}" href="#">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">transform</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Compresser un modèle</span>
+                </a>
+            </li>
+
+            
+             <!-- Reports and Analytics -->
+             <li class="nav-item">
+                <a class="nav-link text-white {% if 'reports' in request.path %} active {% endif %}" href="#">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">bar_chart</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Rapports</span>
+                </a>
+            </li>
+            <!-- History and Logs -->
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'history' in request.path %} active {% endif %}" href="#">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">history</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Historique</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link text-white {% if 'settings' in request.path %} active {% endif %}" href="#">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="material-icons opacity-10">settings</i>
+                    </div>
+                    <span class="nav-link-text ms-1">Paramètres</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</aside>
