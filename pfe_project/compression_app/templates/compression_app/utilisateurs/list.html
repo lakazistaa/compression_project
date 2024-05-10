@@ -1,0 +1,113 @@
+{% extends "layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} Utilisateurs {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header">
+                    <div class="row mb-0 p-0">
+                        <div class="col">
+                            <h5 class="mb-0">Liste des Utilisateurs</h5>
+                        </div>
+                        <div class="col text-end">
+                            <a class="btn btn-success" href="{% url 'add_utilisateur' %}">Add +</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-body px-1 pb-2">
+                    <div class="table-responsive p-3">
+                        <table id="utilisateurTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Nom</th>
+                                    <th class="text-center">Email</th>
+                                    <th class="text-center">Role</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('#utilisateurTable').DataTable({
+            language: {
+                url: '{% static 'json/French.json'%}',
+            },
+            "ajax": {
+                "url": "{% url 'get_utilisateurs' %}",  // Adjust URL to your view
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "nom" },
+                { "data": "email" },
+                { "data": "role" },
+                {
+                    "data": "id",
+                    "render": function(data) {
+                        var editUrl = "{% url 'modify_utilisateur' 0 %}".replace('0', data);
+                        var deleteBtn = `<button class="btn" onclick="confirmDeleteUtilisateur(${data})"><i class="material-icons text-danger position-relative text-lg">delete</i></button>`;
+                        var modifyBtn = `<a class="btn" href='${editUrl}'><i class="material-icons text-success position-relative text-lg">edit</i></a>`;
+                        return modifyBtn + ' ' + deleteBtn;
+                    }
+                }
+            ]
+        });
+    });
+
+    function confirmDeleteUtilisateur(id) {
+        Swal.fire({
+            title: 'Êtes-vous sûr(e) ?',
+            text: 'Vous ne pourrez pas revenir en arrière !',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Oui, supprimer !',
+            cancelButtonText: 'Annuler',
+            reverseButtons: true,
+            customClass: {
+                confirmButton: 'btn btn-danger',
+                cancelButton: 'btn btn-secondary'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteUtilisateur(id);
+            }
+        });
+    }
+
+    function deleteUtilisateur(id) {
+        $.ajax({
+            url: '/delete-utilisateur/' + id + '/',
+            type: 'POST',
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function(response) {
+                Swal.fire('Supprimé !', 'L\'utilisateur a été supprimé avec succès.', 'success');
+                // Optionally update the DataTable here
+            },
+            error: function() {
+                Swal.fire('Erreur !', 'La suppression a échoué.', 'error');
+            }
+        });
+    }
+</script>
+{% endblock scripts %}

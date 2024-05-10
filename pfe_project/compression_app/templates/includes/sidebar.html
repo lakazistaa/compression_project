@@ -23,7 +23,7 @@
 
             <!-- User and Access Management -->
             <li class="nav-item">
-                <a class="nav-link text-white {% if 'users' in request.path %} active {% endif %}" href="#">
+                <a class="nav-link text-white {% if 'users' in request.path %} active {% endif %}" href="{% url 'utilisateurs' %}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">people</i>
                     </div>
@@ -33,7 +33,7 @@
 
             <!-- Data Management -->
             <li class="nav-item">
-                <a class="nav-link text-white {% if 'datasets' in request.path %} active {% endif %}" href="#">
+                <a class="nav-link text-white {% if 'datasets' in request.path %} active {% endif %}" href="{% url 'jeux_de_donnees' %}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">storage</i>
                     </div>
@@ -43,7 +43,7 @@
 
             <!-- Compression Tasks and Methods -->
             <li class="nav-item">
-                <a class="nav-link text-white {% if 'compression-methods' in request.path %} active {% endif %}" href="#">
+                <a class="nav-link text-white {% if 'compression-methods' in request.path %} active {% endif %}" href="{% url 'methodes_compression' %}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">compress</i>
                     </div>
