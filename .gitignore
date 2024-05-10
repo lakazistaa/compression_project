@@ -3,6 +3,7 @@ myenv/
 
 # Ignore all .pyc files
 *.pyc
+pfe_project/compression_app/__pycache__/*.pyc
 
 
 # Ignore the db.sqlite3 file
