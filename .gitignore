@@ -1,2 +1,8 @@
 # Ignore myenv directory
 myenv/
+
+# Ignore all .pyc files
+*.pyc
+
+
+
