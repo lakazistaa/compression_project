@@ -82,7 +82,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Laka Zistaa - [lakazistaa@gmail.com](mailto:your-email@example.com)
-
 Project Link: [https://github.com/lakazistaa/compression_project.git](https://github.com/lakazistaa/compression_project.git)
 
