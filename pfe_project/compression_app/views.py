@@ -148,7 +148,7 @@ def compress_model(request):
     else:
         datasets = JeuDeDonnees.objects.all()
         methods = MethodeCompression.objects.all()
-        return render(request, 'compression_app/compresser_modele/index.html', {'datasets': datasets, 'methods': methods})
+        return render(request, 'compression_app/compresser_modele/index2.html', {'datasets': datasets, 'methods': methods})
 
 def upload_model(request):
     if request.method == 'POST':

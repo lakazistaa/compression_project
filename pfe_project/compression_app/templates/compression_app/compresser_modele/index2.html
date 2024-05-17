@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %} {% load i18n static %} {% block title %}
+Compresser un Modèle {% endblock title %} {% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dropzone.css' %}" />
+{% endblock extrastyle %} {% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card my-4">
+        <div class="card-header text-center">
+          <h5 class="mb-0">Compresser un nouveau modèle</h5>
+        </div>
+        <div class="card-body">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %} {% block scripts %}
+<script src="{% static 'js/dropzone.js' %}"></script>
+{% endblock scripts %}
