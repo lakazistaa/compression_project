@@ -26,5 +26,9 @@ urlpatterns = [
     path('methodes-compression/edit/<int:methode_id>/', add_modify_methode_compression, name='modify_methode_compression'),
     path('methodes-compression/delete/<int:methode_id>/', delete_methode_compression, name='delete_methode_compression'),
 
+    #----------------------- compress_model ------------------------------
+    path('compress_model/', compress_model, name="compress_model"),
+    path('upload-model/', upload_model, name='upload_model'),
+
     
 ]

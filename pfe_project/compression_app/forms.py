@@ -42,3 +42,23 @@ class MetriqueCompressionForm(forms.ModelForm):
     class Meta:
         model = MetriqueCompression
         fields = '__all__'
+
+class CompressionForm(forms.ModelForm):
+    class Meta:
+        model = Tache
+        fields = ['jeux_de_donnees', 'metrique_compression']
+        widgets = {
+            'jeux_de_donnees': forms.Select(attrs={'class': 'form-control'}),
+            'taux_compression': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'metrique_compression': forms.Select(attrs={'class': 'form-control'}),
+            'methode_compression': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    METRIQUE_CHOICES = [
+        ('ssim', 'SSIM'),
+        ('l0', 'L0'),
+        ('l1', 'L1'),
+        ('l2', 'L2'),
+    ]
+
+    metrique_compression = forms.ChoiceField(choices=METRIQUE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
