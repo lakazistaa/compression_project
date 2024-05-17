@@ -43,57 +43,9 @@
         </div>
     </div>
 </div>
-
-<!-- Modal pour la modification de l'utilisateur (idriss) -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="mb-0 text-center">Ajouter/Modifier un utilisateur</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        
-        
-        <form action="{% url 'update_user'  %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <input type="text" name="id"  maxlength="255" required="" id="id_id" hidden>
-            <p>
-                <label for="id_nom">Nom:</label>
-                <input type="text" name="nom"  maxlength="255" required="" id="id_nom">
-                
-                
-            </p>
-            <p>
-                <label for="id_email">Email:</label>
-                <input type="email" name="email"  maxlength="254" required="" id="id_email">
-                
-                
-              </p>
-            <p>
-                <label for="id_role">Role:</label>
-                <input type="text" name="role"  maxlength="100" required="" id="id_role">
-
-            </p>
- 
-            <div class="modal-footer">
-                <button type="submit" name="action" value="save" class="btn btn-success col-3 mx-2">Eregister</button>
-                <button type="submit" name="action" value="save_and_add_another" class="btn btn-success col-3 mx-2">Enregistrer et ajouter un autre</button>
-                <a class="btn btn-warning col-3" href="{% url 'utilisateurs' %}">Annuler</a>
-              </div>
-        </form>
-
-
-       
-        
-    
-      </div>
-    </div>
-  </div>
 {% endblock content %}
 
 {% block scripts %}
-
 <script>
     $(document).ready(function() {
         $('#utilisateurTable').DataTable({
@@ -113,11 +65,8 @@
                     "render": function(data) {
                         var editUrl = "{% url 'modify_utilisateur' 0 %}".replace('0', data);
                         var deleteBtn = `<button class="btn" onclick="confirmDeleteUtilisateur(${data})"><i class="material-icons text-danger position-relative text-lg">delete</i></button>`;
-                       // var modifyBtn = `<a  class="btn" href='${editUrl}'><i class="material-icons text-success position-relative text-lg">edit</i></a>`;
-                         var modifyBtn = `<a id="editLink" onclick='show_modal(${data})' class="btn" ><i class="material-icons text-success position-relative text-lg">edit</i></a>`;
-                      
-                      
-                       return modifyBtn + ' ' + deleteBtn;
+                        var modifyBtn = `<a class="btn" href='${editUrl}'><i class="material-icons text-success position-relative text-lg">edit</i></a>`;
+                        return modifyBtn + ' ' + deleteBtn;
                     }
                 }
             ]
@@ -126,7 +75,6 @@
 
     function confirmDeleteUtilisateur(id) {
         Swal.fire({
-            
             title: 'Êtes-vous sûr(e) ?',
             text: 'Vous ne pourrez pas revenir en arrière !',
             icon: 'warning',
@@ -140,123 +88,26 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                    url: 'delete/' + id + '/',
-                    type: 'POST',
-                    beforeSend: function(xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                    },
-                    success: function(response) {
-                        Swal.fire('Supprimé !', 'L\'utilisateur a été supprimé avec succès.', 'success');
-                        console.log('rani jit 4');
-                        // Optionally update the DataTable here
-                         // Rediriger vers le tableau de bord après le succès
-                         window.location.href = '{% url "utilisateurs" %}'; 
-                    },
-                    error: function() {
-                        Swal.fire('Erreur !', 'La suppression a échoué.', 'error');
-                        console.log('rani jit 5');
-                    }
-                });
-               // console.log('rani jit 1');
-                //deleteUtilisateur(id);
-                
-                // Utilisation de AJAX pour appeler la vue Django
-               /* $.ajax({
-                    url: '/utilisateurs/',
-                    type: 'POST',  // ou 'GET' selon votre vue Django
-                    beforeSend: function(xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                    },
-                    success: function(response) {
-                        // Gérer la réponse si nécessaire
-                        console.log('rani jit 2');
-                        console.log(response);
-                    },
-                    error: function(xhr, errmsg, err) {
-                        // Gérer les erreurs
-                        console.log('rani jit lerreur');
-                        console.log('Erreur : ' + errmsg);
-                    }
-                });*/
-
+                deleteUtilisateur(id);
             }
         });
     }
 
     function deleteUtilisateur(id) {
-        console.log('rani jit 3');
         $.ajax({
-            url: 'delete/' + id + '/',
+            url: '/delete-utilisateur/' + id + '/',
             type: 'POST',
             beforeSend: function(xhr, settings) {
                 xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
             },
             success: function(response) {
                 Swal.fire('Supprimé !', 'L\'utilisateur a été supprimé avec succès.', 'success');
-                console.log('rani jit 4');
                 // Optionally update the DataTable here
             },
             error: function() {
                 Swal.fire('Erreur !', 'La suppression a échoué.', 'error');
-                console.log('rani jit 5');
             }
         });
     }
-    /*function show_modal()
-    {
-        event.preventDefault();  // Empêcher le comportement par défaut du lien
-    
-        // Afficher le modal correspondant
-        const modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
-        modal.show();
-    }*/
-    function show_modal(utilisateurId) {
-        console.log(utilisateurId);
-    // Récupérer l'URL pour récupérer les informations de l'utilisateur
-    const editUrl = `/get_utilisateur_byid/${utilisateurId}/`;  // Assurez-vous d'ajuster l'URL en fonction de votre configuration
-    
-    // Envoyer une requête AJAX pour récupérer les informations de l'utilisateur
-    fetch(editUrl)
-        .then(response => response.json())
-        .then(data => {
-            // Afficher les données récupérées dans la console
-            console.log('Données de l\'utilisateur :', data);
-            // Pré-remplir le formulaire avec les données de l'utilisateur
-            document.getElementById('id_nom').value = data.nom;
-            document.getElementById('id_email').value = data.email;
-            document.getElementById('id_role').value = data.role;
-            document.getElementById('id_id').value = data.id;
-
-            // Afficher le modal
-            const modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
-            modal.show();
-        })
-        .catch(error => {
-            console.error('Erreur lors de la récupération des données de l\'utilisateur :', error);
-        });
-}
-
-
-
 </script>
-<script>
-    
- /*  document.addEventListener('DOMContentLoaded', function() {
-        // Récupérer le lien vers le modal
-        const editLink = document.getElementById('editLink');
-    
-        // Ajouter un écouteur d'événement au clic sur le lien
-        editLink.addEventListener('click', function(event) {
-            event.preventDefault();  // Empêcher le comportement par défaut du lien
-    
-            // Afficher le modal correspondant
-            const modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
-            modal.show();
-        });
-    });*/
-    
-    
-    </script>
-
 {% endblock scripts %}

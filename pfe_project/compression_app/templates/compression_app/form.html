@@ -19,12 +19,11 @@
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.as_p }}
-                       
 
                         <div class="row">
                             <button type="submit" name="action" value="save" class="btn btn-success col-3 mx-2">Enregistrer</button>
                             <button type="submit" name="action" value="save_and_add_another" class="btn btn-success col-3 mx-2">Enregistrer et ajouter un autre</button>
-                            <a class="btn btn-warning col-3" href="{% url 'utilisateurs' %}">Annuler</a>
+                            <a class="btn btn-warning col-3" href="{% url list_view_name %}">Annuler</a>
                         </div>
                     </form>
                 </div>
