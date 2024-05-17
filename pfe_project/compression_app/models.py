@@ -35,6 +35,7 @@ class MetriqueEvaluation(models.Model):
 
 class Tache(models.Model):
     date = models.DateTimeField(auto_now_add=True)
+    titre = models.CharField(max_length=255)
     taux_compression = models.DecimalField(max_digits=5, decimal_places=2, default=1.0)
     modele = models.ForeignKey(Modele, on_delete=models.CASCADE)
     finished = models.BooleanField(default=False)

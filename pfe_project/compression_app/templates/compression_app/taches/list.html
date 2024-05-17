@@ -1,0 +1,187 @@
+{% extends "layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} Compresser un Modèle {% endblock title %}
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dropzone.css' %}">
+{% endblock extrastyle %}
+
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <h5 class="mb-0 ">Tâches de compression</h5>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div class="row">
+                      <div class="col-6">
+                        <h6 class="mb-0">Tâches en cours</h6>
+                      </div>
+                      <div class="col-6 text-end">
+                        <button type="button" class="btn btn-success" id="add_task">
+                          <i class="material-icons">add</i> Nouvelle tache</button> 
+                      </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nom du modèle</th>
+                                    <th scope="col">Dataset</th>
+                                    <th scope="col">Méthode</th>
+                                    <th scope="col">Taux de compression</th>
+                                    <th scope="col">Métrique</th>
+                                    <th scope="col">Date de création</th>
+                                    <th scope="col">Etat</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%if tasks %}
+                                {% for task in tasks %}
+                                <tr>
+                                    <td>{{ task.model_name }}</td>
+                                    <td>{{ task.dataset }}</td>
+                                    <td>{{ task.method }}</td>
+                                    <td>{{ task.taux_compression }}</td>
+                                    <td>{{ task.metric }}</td>
+                                    <td>{{ task.created_at }}</td>
+                                    <td>{{ task.status }}</td>
+                                    <td>
+                                        <a href="{% url 'task_detail' task.id %}" class="btn btn-sm btn-primary">Détails</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center">Pas de tâches en cours</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+            
+                </div>
+            </div>
+
+            <div class="card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0">Tâches terminées</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">Nom du modèle</th>
+                        <th scope="col">Dataset</th>
+                        <th scope="col">Méthode</th>
+                        <th scope="col">Taux de compression</th>
+                        <th scope="col">Métrique</th>
+                        <th scope="col">Date de création</th>
+                        <th scope="col">Date de fin</th>
+                        <th scope="col">Etat</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {%if completed_tasks %}
+                      {% for task in completed_tasks %}
+                      <tr>
+                        <td>{{ task.model_name }}</td>
+                        <td>{{ task.dataset }}</td>
+                        <td>{{ task.method }}</td>
+                        <td>{{ task.taux_compression }}</td>
+                        <td>{{ task.metric }}</td>
+                        <td>{{ task.created_at }}</td>
+                        <td>{{ task.updated_at }}</td>
+                        <td>{{ task.status }}</td>
+                        <td>
+                          <a href="{% url 'task_detail' task.id %}" class="btn btn-sm btn-primary">Détails</a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      {% else %}
+                      <tr>
+                        <td colspan="9" class="text-center">Pas de tâches terminées</td>
+                      </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+      $('#add_task').on('click', function() {
+        Swal.fire({
+          title: 'Ajouter une nouvelle tache de compression',
+          html: `
+          <form id="compression-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+         
+            <div class="row mt-2">
+              <div class="col-4">
+                <div class="input-group input-group-static my-3">
+                  <label for="dataset" class="ms-0">Modèle</label><p></p>
+                  <select class="form-control " id="dataset" name="dataset">
+                    <option value="0">Modèle 01</option>
+                    <option value="1">Modèle 02</option>
+                    <option value="2">Modèle 03</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col">
+                <div class="input-group input-group-static my-3">
+                  <label for="method" class="ms-0">Méthode de compression</label><p></p>
+                  <select class="form-control" id="method" name="method">
+                    <option value="0">Elagage des filtres</option>
+                    <option value="1">Elagage des caractéristique</option>
+                  </select>
+                </div>
+              </div>
+              {% comment %} métrique de compression {% endcomment %}
+            </div>
+            <div class="row mt-2">
+              
+              <div class="col">
+                <div class="input-group input-group-static my-3">
+                  <label for="taux_compression" class="ms-0">Taux de compression</label>
+                  <input type="number" class="form-control" id="taux_compression" name="taux_compression">
+                </div>
+              </div>
+              <div class="col">
+                <div class="input-group input-group-static my-3">
+                  <label for="metric" class="ms-0">Métrique</label><p></p>
+                  <select class="form-control" id="metric" name="metric">
+                    <option value="accuracy">Accuracy</option>
+                    <option value="latency">Latency</option>
+                    <option value="energy">Energy</option>
+                  </select>
+                </div>
+              </div>
+              
+            </div>
+            
+            <button type="submit" class="btn btn-primary mt-4">Lancer la compression</button>
+        </form>
+          `,
+          showConfirmButton: false
+      });
+  });
+});
+</script>
+{% endblock scripts %}

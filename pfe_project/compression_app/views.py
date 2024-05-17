@@ -24,6 +24,10 @@ def jeux_de_donnees_list_view(request):
 def methodes_compression_list_view(request):
     return render(request, 'compression_app/methodes_compression/list.html')
 
+# ----------------- Tache --------------------------------
+def taches_list_view(request):
+    return render(request, 'compression_app/taches/list.html')
+
 #------------------- compress_model ----------------------------------------------------
 
 def compress_model(request):

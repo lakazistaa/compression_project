@@ -43,7 +43,7 @@
 {% include 'includes/scripts.html' %}
 
 
-{% block scripts %}{% endblock scripts %}
+
     
 
 <script>
@@ -61,7 +61,8 @@
   <script src="{% static 'js/buttons.js' %}"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="{% static 'js/material-dashboard.min.js' %}"></script>
-
+  <script src="{% static 'js/sweetAlert2.min.js'%}"></script>
+  {% block scripts %}{% endblock scripts %}
 </body>
 
 </html>
