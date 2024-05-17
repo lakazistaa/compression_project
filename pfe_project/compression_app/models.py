@@ -7,18 +7,17 @@ class Utilisateur(models.Model):
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=100)
 
-class Modele(models.Model):
-    nom = models.CharField(max_length=255)
-    #utilisateur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
-    description = models.TextField()
-    path = models.CharField(max_length=255)
-
-
 class JeuDeDonnees(models.Model):
     nom = models.CharField(max_length=255)
     description = models.TextField()
     path = models.CharField(max_length=255)
 
+class Modele(models.Model):
+    nom = models.CharField(max_length=255)
+    jeu_de_donnees = models.ForeignKey(JeuDeDonnees, on_delete=models.CASCADE)
+    #utilisateur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
+    description = models.TextField()
+    path = models.CharField(max_length=255)
 
 class MethodeCompression(models.Model):
     nom = models.CharField(max_length=255)
@@ -42,7 +41,8 @@ class Tache(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     taux_compression = models.DecimalField(max_digits=5, decimal_places=2, default=1.0)
     modele = models.ForeignKey(Modele, on_delete=models.CASCADE)
-    status = models.CharField(max_length=100)
+
+    finished = models.BooleanField(default=False)
     jeux_de_donnees = models.ForeignKey(JeuDeDonnees, on_delete=models.CASCADE)
     methode_compression = models.ForeignKey(MethodeCompression, on_delete=models.CASCADE)
     metrique_compression = models.ForeignKey(MetriqueCompression, on_delete=models.CASCADE)

@@ -126,29 +126,30 @@ def compress_model(request):
         dataset_id = data.get('dataset')
         method_id = data.get('method')
         taux_compression = data.get('taux_compression')
-        metric = data.get('metric')
-        file_path = data.get('file_path')
+        metric_id= data.get('metric')
+        modele_id = data.get('modele')
 
         dataset = get_object_or_404(JeuDeDonnees, pk=dataset_id)
         method = get_object_or_404(MethodeCompression, pk=method_id)
+        metric = get_object_or_404(MetriqueCompression, pk=metric_id)
+        modele = get_object_or_404(Modele, pk=modele_id)
 
         tache = Tache.objects.create(
             jeux_de_donnees=dataset,
             taux_compression=taux_compression,
             metrique_compression=metric,
             methode_compression=method,
-            status='Pending',
-            resultats='',  # Initialize empty or as needed
-            modele_path=file_path  # Assuming you store the file path
+            modele=modele,
         )
         tache.save()
 
         return JsonResponse({'status': 'success'})
 
     else:
-        datasets = JeuDeDonnees.objects.all()
         methods = MethodeCompression.objects.all()
-        return render(request, 'compression_app/compresser_modele/index2.html', {'datasets': datasets, 'methods': methods})
+        metrics = MetriqueCompression.objects.all()
+        modeles = Modele.objects.all()
+        return render(request, 'compression_app/compresser_modele/index.html', { 'methods': methods, 'metrics': metrics, 'modeles': modeles})
 
 def upload_model(request):
     if request.method == 'POST':
