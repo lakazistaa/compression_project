@@ -33,8 +33,6 @@ class MetriqueEvaluation(models.Model):
     description = models.TextField()
     
 
-
-
 class Tache(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     taux_compression = models.DecimalField(max_digits=5, decimal_places=2, default=1.0)
@@ -50,7 +48,7 @@ class ModeleCompresse(models.Model):
     path = models.CharField(max_length=255)
     modele = models.ForeignKey(Modele, on_delete=models.CASCADE)
     tache = models.ForeignKey(Tache, on_delete=models.CASCADE)
-    
+
 class ResultatEvaluation(models.Model):
     modele_compresse = models.ForeignKey(ModeleCompresse, on_delete=models.CASCADE)
     metrique_evaluation = models.ForeignKey(MetriqueEvaluation, on_delete=models.CASCADE)
