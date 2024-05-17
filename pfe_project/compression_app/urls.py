@@ -8,6 +8,8 @@ urlpatterns = [
     # ----------------------- utilisateur -----------------------
     path('utilisateurs/', utilisateurs_list_view, name='utilisateurs'),
     path('get_utilisateurs/', get_utilisateurs, name='get_utilisateurs'),
+    path('get_utilisateur_byid/<int:utilisateur_id>/', get_utilisateur_byid, name='get_utilisateur_byid'),
+    path('update_user/', update_user, name='update_user'),
     path('utilisateurs/add/', add_modify_utilisateur, name='add_utilisateur'),
     path('utilisateurs/edit/<int:utilisateur_id>/', add_modify_utilisateur, name='modify_utilisateur'),
     path('utilisateurs/delete/<int:utilisateur_id>/', delete_utilisateur, name='delete_utilisateur'),
