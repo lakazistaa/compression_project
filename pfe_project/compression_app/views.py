@@ -14,6 +14,38 @@ def dashboard_view(request):
 def utilisateurs_list_view(request):
     return render(request, 'compression_app/utilisateurs/list.html')
 
+def get_utilisateurs(request):
+    utilisateurs = list(Utilisateur.objects.values())
+    return JsonResponse(utilisateurs, safe=False)
+
+def add_modify_utilisateur(request, utilisateur_id=None):
+    if utilisateur_id:
+        utilisateur = get_object_or_404(Utilisateur, pk=utilisateur_id)
+    else:
+        utilisateur = None
+
+    if request.method == 'POST':
+        form = UtilisateurForm(request.POST, instance=utilisateur)
+        if form.is_valid():
+            form.save()
+            action = request.POST.get('action')
+            if action == 'save_and_add_another':
+                return redirect('add_utilisateur')
+            else:
+                return redirect('get_utilisateurs')
+    else:
+        form = UtilisateurForm(instance=utilisateur)
+
+    return render(request, 'compression_app/form.html', {'form': form, 'model_name': 'Utilisateur', 'list_view_name': 'get_utilisateurs'})
+
+def delete_utilisateur(request, utilisateur_id):
+    if request.method == 'POST':
+        utilisateur = get_object_or_404(Utilisateur, pk=utilisateur_id)
+        utilisateur.delete()
+        return JsonResponse({'message': 'Utilisateur deleted successfully'}, status=200)
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
 
 # ------------------ JeuDeDonnees --------------------------------
 def jeux_de_donnees_list_view(request):
