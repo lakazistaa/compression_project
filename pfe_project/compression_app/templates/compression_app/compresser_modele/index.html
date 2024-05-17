@@ -1,0 +1,149 @@
+{% extends "layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} Compresser un Modèle {% endblock title %}
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dropzone.css' %}">
+{% endblock extrastyle %}
+
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header text-center">
+                    <h5 class="mb-0 ">Compresser un nouveau modèle</h5>
+                </div>
+                <div class="card-body">
+                    <form id="compression-form" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                          {% comment %} trois col {% endcomment %}
+                          <div class="col-8">
+                            <div class="row">
+                              <div class="input-group input-group-static px-2">
+                                <label for="model-name" class="ms-0">Nom du modèle</label><p></p>
+                                <input type="text" class="form-control" id="model-name" name="model-name">
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-8">
+                                <div class="input-group input-group-static my-3 ">
+                                  <label for="description" class="ms-0 ">Description</label><p></p>
+                                  <textarea class="form-control" id="description" name="description" placeholder="Ex : tâche de compression d modèle xxxx entrainé sur le dataset yyyy"></textarea>
+                                </div>
+                              </div>  
+                            </div>
+                          </div>
+                          <div class="col-4 text-center">
+                            <label for="model-file text-dark">Poids du modèle à compresser</label>
+                            <div class="dropzone rounded" id="model-dropzone"></div>
+                          </div>
+                        </div>
+                     
+                        <div class="row mt-2">
+                          <div class="col-4">
+                            <div class="input-group input-group-static my-3">
+                              <label for="dataset" class="ms-0">Dataset</label><p></p>
+                              <select class="form-control" id="dataset" name="dataset">
+                                <option value="0">MNIST</option>
+                                <option value="1">CIFAR-10</option>
+                                <option value="2">CIFAR-100</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-4">
+                            <div class="input-group input-group-static my-3">
+                              <label for="method" class="ms-0">Méthode de compresseion</label><p></p>
+                              <select class="form-control" id="method" name="method">
+                                <option value="0">Elagage des filtres</option>
+                                <option value="1">Elagage des caractéristique</option>
+                              </select>
+                            </div>
+                          </div>
+                          {% comment %} métrique de compression {% endcomment %}
+                          <div class="col-4">
+                            <div class="input-group input-group-static my-3">
+                              <label for="metric" class="ms-0">Métrique</label><p></p>
+                              <select class="form-control" id="metric" name="metric">
+                                <option value="accuracy">Accuracy</option>
+                                <option value="latency">Latency</option>
+                                <option value="energy">Energy</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mt-2">
+                          
+                          <div class="col-4">
+                            <div class="input-group input-group-static my-3">
+                              <label for="taux_compression" class="ms-0">Taux de compression</label>
+                              <input type="number" class="form-control" id="taux_compression" name="taux_compression">
+                            </div>
+                          </div>
+                          
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary mt-4">Lancer la compression</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'js/dropzone.js' %}"></script>
+<script>
+Dropzone.options.modelDropzone = {
+  url: '{% url 'upload_model' %}',  // Separate URL for file upload
+  maxFiles: 1,
+  acceptedFiles: '.h5,.onnx,.pb',
+  addRemoveLinks: true,
+  autoProcessQueue: false,
+  init: function() {
+    var myDropzone = this;
+    // When the form is submitted
+    document.querySelector("#compression-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      // Process Dropzone upload
+      myDropzone.processQueue();
+    });
+
+    // On success, submit the form
+    myDropzone.on("success", function(file, response) {
+      console.log(response);
+      var dataset = document.querySelector("#dataset").value;
+      var method = document.querySelector("#method").value;
+      var taux_compression = document.querySelector("#taux_compression").value;
+      var metric = document.querySelector("#metric").value;
+
+      // Send a POST request with the form data
+      fetch("{% url 'compress_model' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+          dataset: dataset,
+          method: method,
+          taux_compression: taux_compression,
+          metric: metric,
+          file_path: response.file_path  // Assuming the response includes the file path
+        })
+      }).then(response => {
+        if (response.ok) {
+          window.location.href = "#";  // Redirect to success page
+        } else {
+          alert("Impossible de lancer la tâche de compression. Veuillez réessayer.");
+        }
+      });
+    });
+  }
+};
+</script>
+{% endblock scripts %}
