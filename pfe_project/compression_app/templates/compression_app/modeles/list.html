@@ -22,7 +22,7 @@
                         <h6 class="mb-0">Modèles</h6>
                       </div>
                       <div class="col-6 text-end">
-                        <button type="button" class="btn btn-success" id="add_task">
+                        <button type="button" class="btn btn-success" id="add_model">
                           <i class="material-icons">add</i> Nouveau modèle</button> 
                       </div>
                     </div>
@@ -56,7 +56,7 @@
                                 {% endfor %}
                                 {% else %}
                                 <tr>
-                                    <td colspan="8" class="text-center">Pas de modèles</td>
+                                    <td colspan="4" class="text-center">Pas de modèles</td>
                                 </tr>
                                 {% endif %}
                             </tbody>
@@ -71,45 +71,77 @@
 {% endblock content %}
 
 {% block scripts %}
+<script src="{% static 'js/dropzone.js' %}"></script>
 <script>
   $(document).ready(function() {
-      $('#add_task').on('click', function() {
+      $('#add_model').on('click', function() {
         Swal.fire({
-          title: 'Ajouter une nouveau modèle',
+          title: 'Ajouter un nouveau modèle',
           html: `
-          <form id="compression-form" method="post" enctype="multipart/form-data">
+          <form id="add-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-         
             <div class="row">
-                {% comment %} trois col {% endcomment %}
-                <div class="col-8">
-                  <div class="row">
-                    <div class="input-group input-group-static px-2">
+                <div class="col">
+                    <div class="input-group input-group-static">
                       <label for="model-name" class="ms-0">Nom du modèle</label><p></p>
                       <input type="text" class="form-control" id="model-name" name="model-name">
                     </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-8">
-                      <div class="input-group input-group-static my-3 ">
+                </div>
+                <div class="col">
+                    <div class="input-group input-group-static">
+                        <label for="dataset" class="ms-0">Dataset</label><p></p>
+                        <select class="form-control" id="dataset" name="dataset">
+                          <option value="0">MNIST</option>
+                          <option value="1">CIFAR-10</option>
+                          <option value="2">CIFAR-100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row p-4">
+                    <div class="col">
+                      <div class="input-group input-group-static">
                         <label for="description" class="ms-0 ">Description</label><p></p>
-                        <textarea class="form-control" id="description" name="description" placeholder="Ex : tâche de compression d modèle xxxx entrainé sur le dataset yyyy"></textarea>
+                        <textarea class="form-control" id="description" name="description" rows="1"></textarea>
                       </div>
                     </div>  
-                  </div>
-                </div>
-                <div class="col-4 text-center">
+            </div>
+            <div class=" row  p-4">
                   <label for="model-file text-dark">Poids du modèle à compresser</label>
                   <div class="dropzone rounded" id="model-dropzone"></div>
-                </div>
-              </div>
-            
+            </div>
             <button type="submit" class="btn btn-primary mt-4">Sauvegarder</button>
         </form>
           `,
+          didOpen: () => {
+            var myDropzone = new Dropzone("#model-dropzone", {
+                url: '{% url "upload_model" %}',
+                maxFiles: 1, // MB
+                acceptedFiles: ".h5,.onnx,.pb",
+                addRemoveLinks: true,
+                autoProcessQueue: false,
+                dictDefaultMessage: "Déposez vos fichiers ici ou cliquez pour télécharger", // Custom message
+                init: function() {
+                  var myDropzone = this;
+                  // When the form is submitted
+                  document.querySelector("#add-form").addEventListener("submit", function(e) {
+                    e.preventDefault();
+                    // Process Dropzone upload
+                    myDropzone.processQueue();
+                  });
+  
+                  // On success, submit the form
+                  myDropzone.on("success", function(file, response) {
+                    console.log('file uploaded');
+                  });
+                }
+              });
+            },
           showConfirmButton: false
       });
   });
 });
 </script>
+
+
 {% endblock scripts %}

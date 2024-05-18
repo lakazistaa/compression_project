@@ -1,0 +1,136 @@
+{% extends "layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} Compresser un Modèle {% endblock title %}
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dropzone.css' %}">
+{% endblock extrastyle %}
+
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <h5 class="mb-0 ">Jeux de données</h5>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div class="row">
+                      <div class="col-6">
+                        <h6 class="mb-0">Jeux de données disponibles</h6>
+                      </div>
+                      <div class="col-6 text-end">
+                        <button type="button" class="btn btn-success" id="add_model">
+                          <i class="material-icons">add</i> Nouveau jeu</button> 
+                      </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nom</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Nb de modèles</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%if datasets %}
+                                {% for dataset in datasets %}
+                                <tr>
+                                    <td>{{ dataset.nom }}</td>
+                                    <td>{{ dataset.description }}</td>
+                                    <td>{{ dataset.nb_modeles }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm">Détails</a>
+                                        <a href="#" class="btn btn-sm">Télécharger</a>    
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Pas de jeux de données</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+            
+                </div>
+            </div>
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'js/dropzone.js' %}"></script>
+<script>
+  $(document).ready(function() {
+      $('#add_model').on('click', function() {
+        Swal.fire({
+          title: 'Ajouter un nouveau modèle',
+          html: `
+          <form id="add-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row p-4">
+                <div class="col">
+                    <div class="input-group input-group-static">
+                      <label for="model-name" class="ms-0">Nom</label><p></p>
+                      <input type="text" class="form-control" id="model-name" name="model-name">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-4">
+                    <div class="col">
+                      <div class="input-group input-group-static">
+                        <label for="description" class="ms-0 ">Description</label><p></p>
+                        <textarea class="form-control" id="description" name="description" rows="1"></textarea>
+                      </div>
+                    </div>  
+            </div>
+            <div class=" row  p-4">
+                  <label for="model-file text-dark">le fichier compressée du jeu de données</label>
+                  <div class="dropzone rounded" id="model-dropzone"></div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Sauvegarder</button>
+        </form>
+          `,
+          didOpen: () => {
+            var myDropzone = new Dropzone("#model-dropzone", {
+                url: '{% url "upload_model" %}',
+                maxFiles: 1, // MB
+                acceptedFiles: ".h5,.onnx,.pb",
+                addRemoveLinks: true,
+                autoProcessQueue: false,
+                dictDefaultMessage: "Déposez vos fichiers ici ou cliquez pour télécharger", // Custom message
+                init: function() {
+                  var myDropzone = this;
+                  // When the form is submitted
+                  document.querySelector("#add-form").addEventListener("submit", function(e) {
+                    e.preventDefault();
+                    // Process Dropzone upload
+                    myDropzone.processQueue();
+                  });
+  
+                  // On success, submit the form
+                  myDropzone.on("success", function(file, response) {
+                    console.log('file uploaded');
+                  });
+                }
+              });
+            },
+          showConfirmButton: false
+      });
+  });
+});
+</script>
+
+
+{% endblock scripts %}
