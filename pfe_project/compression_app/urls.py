@@ -9,6 +9,8 @@ urlpatterns = [
     path('methodes_compression/', methodes_compression_list_view, name='methodes_compression'),
     #taches
     path('taches/', taches_list_view, name='taches'),
+    #modeles
+    path('modeles/', modeles_list_view, name='modeles'),
     #----------------------- compress_model ------------------------------
     path('compress_model/', compress_model, name="compress_model"),
     path('upload-model/', upload_model, name='upload_model'),

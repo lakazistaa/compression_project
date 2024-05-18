@@ -60,6 +60,14 @@ def methodes_compression_list_view(request):
 def taches_list_view(request):
     return render(request, 'compression_app/taches/list.html')
 
+# ----------------- Modele --------------------------------
+def modeles_list_view(request):
+    uploaded_models = Modele.objects.all()
+    compressed_models = ModeleCompresse.objects.all()
+    datasets = JeuDeDonnees.objects.all()
+    #models = uploaded models + attribute 'origin'='uploaded', compressed models + attribute 'origin'='compressed'
+    models = [{'id': model.id, 'nom': model.nom, 'dataset': model.jeu_de_donnees, 'origin': 'uploaded'} for model in uploaded_models] + [{'id': model.id, 'nom': model.nom, 'origin': 'compressed', 'dataset': model.modele.jeu_de_donnees} for model in compressed_models]
+    return render(request, 'compression_app/modeles/list.html', {'models': models, 'datasets': datasets})
 #------------------- compress_model ----------------------------------------------------
 
 def compress_model(request):
@@ -88,10 +96,9 @@ def compress_model(request):
         return JsonResponse({'status': 'success'})
 
     else:
-        methods = MethodeCompression.objects.all()
-        metrics = MetriqueCompression.objects.all()
+        datasets = JeuDeDonnees.objects.all()
         modeles = Modele.objects.all()
-        return render(request, 'compression_app/compresser_modele/index.html', { 'methods': methods, 'metrics': metrics, 'modeles': modeles})
+        return render(request, 'compression_app/modeles/list.html', { 'datasets': datasets, 'modeles': modeles})
 
 def upload_model(request):
     if request.method == 'POST':

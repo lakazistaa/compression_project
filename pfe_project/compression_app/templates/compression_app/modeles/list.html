@@ -1,0 +1,115 @@
+{% extends "layouts/base.html" %}
+{% load i18n static %}
+
+{% block title %} Compresser un Modèle {% endblock title %}
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dropzone.css' %}">
+{% endblock extrastyle %}
+
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+            <div class="card mb-3">
+                <div class="card-header text-center">
+                    <h5 class="mb-0 ">Modèles</h5>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div class="row">
+                      <div class="col-6">
+                        <h6 class="mb-0">Modèles</h6>
+                      </div>
+                      <div class="col-6 text-end">
+                        <button type="button" class="btn btn-success" id="add_task">
+                          <i class="material-icons">add</i> Nouveau modèle</button> 
+                      </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nom du modèle</th>
+                                    <th scope="col">Dataset</th>
+                                    <th scope="col">Origine</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%if modeles %}
+                                {% for modele in modeles %}
+                                <tr>
+                                    <td>{{ modele.nom }}</td>
+                                    <td>{{ modele.dataset }}</td>
+                                    <td>{{ modele.origine }}</td>
+                                    <td>
+                                        <a href="" class="btn btn-sm">Détails</a>
+                                        {% comment %} download button with downloa icon {% endcomment %}
+                                        <a href="#" class="btn btn-sm btn-primary">Télécharger</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center">Pas de modèles</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+            
+                </div>
+            </div>
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function() {
+      $('#add_task').on('click', function() {
+        Swal.fire({
+          title: 'Ajouter une nouveau modèle',
+          html: `
+          <form id="compression-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+         
+            <div class="row">
+                {% comment %} trois col {% endcomment %}
+                <div class="col-8">
+                  <div class="row">
+                    <div class="input-group input-group-static px-2">
+                      <label for="model-name" class="ms-0">Nom du modèle</label><p></p>
+                      <input type="text" class="form-control" id="model-name" name="model-name">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-8">
+                      <div class="input-group input-group-static my-3 ">
+                        <label for="description" class="ms-0 ">Description</label><p></p>
+                        <textarea class="form-control" id="description" name="description" placeholder="Ex : tâche de compression d modèle xxxx entrainé sur le dataset yyyy"></textarea>
+                      </div>
+                    </div>  
+                  </div>
+                </div>
+                <div class="col-4 text-center">
+                  <label for="model-file text-dark">Poids du modèle à compresser</label>
+                  <div class="dropzone rounded" id="model-dropzone"></div>
+                </div>
+              </div>
+            
+            <button type="submit" class="btn btn-primary mt-4">Sauvegarder</button>
+        </form>
+          `,
+          showConfirmButton: false
+      });
+  });
+});
+</script>
+{% endblock scripts %}
