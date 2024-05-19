@@ -1,22 +1,356 @@
-{% extends 'layouts/base.html' %}
-{% load i18n static %}
+{% extends 'layouts/base.html' %} {% load i18n static %} {% block title %} Home
+{% endblock title %} {% block content %}
 
-{% block title %} Home {% endblock title %}
+{% block extrastyles%}
+<style>
+  .badge-dot {
+      display: inline-flex;
+      align-items: center;
+  }
 
-{% block content %}
-    
+  .badge-dot i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+  }
+
+  .bg-info { background-color: #17a2b8; }
+  .bg-primary { background-color: #007bff; }
+  .bg-dark { background-color: #343a40; }
+  .bg-secondary { background-color: #6c757d; }
+</style>
+{% endblock extrastyles%}
+
 <div class="container-fluid py-4">
-    
-    <div class="row mb-4">
-        <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-          <div class="card">
-            <div class="card-header pb-0">
-                <h1 class="text-primary">Dashboard</h1>
-            </div>
-            <div class="card-body p-2">
-              <p>en développement ..</p>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="card">
+        <div class="card-body p-3 position-relative">
+          <div class="row">
+            <div class="col-7 text-start">
+              <p class="text-sm mb-1  font-weight-bold">Nombre d'utilisateurs</p>
+              <h5 class="font-weight-bolder mb-0 ">04</h5>
             </div>
           </div>
         </div>
       </div>
-    {% endblock content %}
+    </div>
+    <div class="col-sm-4 mt-sm-0 mt-4">
+      <div class="card">
+        <div class="card-body p-3 position-relative">
+          <div class="row">
+            <div class="col-7 text-start">
+              <p class="text-sm mb-1  font-weight-bold">
+                Nombre de modèles
+              </p>
+              <h5 class="font-weight-bolder mb-0">06</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 mt-sm-0 mt-4">
+      <div class="card">
+        <div class="card-body p-3 position-relative">
+          <div class="row">
+            <div class="col-7 text-start">
+              <p class="text-sm mb-1 text-capitalize font-weight-bold">
+                Nombre de jeux de données
+              </p>
+              <h5 class="font-weight-bolder mb-0">03</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-lg-4 col-sm-6">
+      <div class="card h-100">
+        <div class="card-header pb-0 p-3">
+          <div class="d-flex justify-content-between">
+            <h6 class="mb-0">Nombre de modèles par utilisateur</h6>
+          </div>
+        </div>
+        <div class="card-body pb-0 p-3 mt-4">
+          <div class="row">
+            <div class="col-7 text-start">
+              <div class="chart">
+                <canvas
+                  id="chart-pie"
+                  class="chart-canvas"
+                  style="
+                    display: block;
+                    box-sizing: border-box;
+                    height: 200px;
+                    width: 179.9px;
+                  "
+                  width="224"
+                  height="250"
+                ></canvas>
+              </div>
+            </div>
+            <div class="col-5 my-auto">
+              <span class="badge badge-md badge-dot me-4 d-block text-start">
+                <i class="bg-info"></i>
+                <span class="text-dark text-xs">Ammad amd</span>
+              </span>
+              <span class="badge badge-md badge-dot me-4 d-block text-start">
+                <i class="bg-primary"></i>
+                <span class="text-dark text-xs">Bouabida kada</span>
+              </span>
+              <span class="badge badge-md badge-dot me-4 d-block text-start">
+                <i class="bg-dark"></i>
+                <span class="text-dark text-xs">foo bar</span>
+              </span>
+              <span class="badge badge-md badge-dot me-4 d-block text-start">
+                <i class="bg-secondary"></i>
+                <span class="text-dark text-xs">utilisateur 01</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8 col-sm-6 mt-sm-0 mt-4">
+  <div class="card h-100">
+        <div class="card-header pb-0 p-3">
+          <div class="d-flex justify-content-between">
+            <h6 class="mb-0">Nombre de modèles par jeu de données</h6>
+          </div>
+        </div>
+        <div class="card-body p-3">
+          <div class="chart">
+            <canvas
+              id="chart-bar"
+              class="chart-canvas"
+              style="
+                display: block;
+                box-sizing: border-box;
+                height: 340px;
+                width: 707.2px;
+              "
+              width="884"
+              height="425"
+            ></canvas>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-lg-8">
+    </div>
+    <div class="col-lg-4 mt-lg-0 mt-4">
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Tâches en cours</h6>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    Utilisateur
+                  </th>
+                  <th
+                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                  >
+                    Modèle
+                  </th>
+                  <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                  Jeu de données
+                  </th>
+                  <th
+                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="d-flex px-3 py-1 align-items-center">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">Ammad Amd</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <p class="text-sm font-weight-normal mb-0">ConvNet</p>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    <p class="text-sm font-weight-normal mb-0">MNIST</p>
+                  </td>
+                  <td class="align-middle text-end">
+                    <div class="text-center">
+                      <a href="#" class="text-secondary font-weight-bold text-info text-xs mx-2">
+                        Détails
+                      </a>  
+                      <a href="#" class="text-secondary font-weight-bold text-xs text-danger">
+                        Arrêter
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'js/chart.js' %}"></script>
+<script>
+  var ctx2 = document.getElementById("chart-pie").getContext("2d");
+  var ctx3 = document.getElementById("chart-bar").getContext("2d");
+
+
+
+
+  // Pie chart
+  new Chart(ctx2, {
+    type: "pie",
+    data: {
+      labels: ['Ammad amd', 'Bouabida kada', 'Foo bar', 'Utilisateur 01'],
+      datasets: [{
+        label: "Modèle par utilisateur",
+        weight: 9,
+        cutout: 0,
+        tension: 0.9,
+        pointRadius: 2,
+        borderWidth: 1,
+        backgroundColor: ['#17c1e8', '#e91e63', '#3A416F', '#a8b8d8'],
+        data: [02, 04, 0, 0],
+        fill: false
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
+      scales: {
+        y: {
+          grid: {
+            drawBorder: false,
+            display: false,
+            drawOnChartArea: false,
+            drawTicks: false,
+            color: '#c1c4ce5c'
+          },
+          ticks: {
+            display: false
+          }
+        },
+        x: {
+          grid: {
+            drawBorder: false,
+            display: false,
+            drawOnChartArea: false,
+            drawTicks: false,
+            color: '#c1c4ce5c'
+          },
+          ticks: {
+            display: false,
+          }
+        },
+      },
+    },
+  });
+
+  // Bar chart
+  new Chart(ctx3, {
+    type: "bar",
+    data: {
+      labels: ['MNIST', 'FashionMNIST', 'CIFAR-10'],
+      datasets: [{
+        label: "Nombre de modèles par dataset",
+        weight: 9,
+        borderWidth: 0,
+        borderRadius: 4,
+        backgroundColor: '#3A416F',
+        data: [02, 02, 02],
+        fill: false
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
+        }
+      },
+      scales: {
+        y: {
+          grid: {
+            drawBorder: false,
+            display: true,
+            drawOnChartArea: true,
+            drawTicks: false,
+            borderDash: [5, 5],
+            color: '#c1c4ce5c'
+          },
+          ticks: {
+            display: true,
+            padding: 10,
+            color: '##343a40',
+            font: {
+              size: 14,
+              weight: 'bold',
+              family: "Roboto",
+              style: 'normal',
+              lineHeight: 2
+            },
+          }
+        },
+        x: {
+          grid: {
+            drawBorder: false,
+            display: false,
+            drawOnChartArea: true,
+            drawTicks: true,
+            color: '#9ca2b7'
+          },
+          ticks: {
+            display: true,
+            color: '#9ca2b7',
+            padding: 10,
+            font: {
+              size: 14,
+              weight: 'bold',
+              family: "Roboto",
+              style: 'normal',
+              lineHeight: 2
+            },
+          }
+        },
+      },
+    },
+  });
+</script>
+{% endblock scripts %}
